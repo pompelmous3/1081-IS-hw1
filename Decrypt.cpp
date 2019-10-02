@@ -40,7 +40,19 @@ int main(int argc, char *argv[]) {
 
 string caesar(string key, string cipherText)
 {
-    return "caesar called";
+	int k = stoi(key);
+	for (int i = 0; i < cipherText.length(); i++)
+	{
+		if (cipherText[i] == 32)
+		{
+			continue;
+		}
+		else
+		{
+			cipherText[i] = ((cipherText[i] - 65) - k + 26) % 26 + 97;
+		}
+	}
+    return cipherText;
 }
 string playfair(string key, string cipherText)
 {
