@@ -40,7 +40,20 @@ int main(int argc, char *argv[]) {
 
 string caesar(string key, string plainText)
 {
-    return "caesar called";
+	int k = std::stoi(key);
+	for (int i = 0; i < plainText.length(); i++)
+	{
+		if (plainText[i] == 32)
+		{
+			continue;
+		}
+		else
+		{
+			plainText[i] = ((plainText[i] - 97) + k) % 26 + 65;
+		}
+	}
+
+    return plainText;
 }
 string playfair(string key, string plainText)
 {
