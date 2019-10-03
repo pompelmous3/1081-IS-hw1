@@ -61,7 +61,30 @@ string playfair(string key, string plainText)
 }
 string vernam(string key, string plainText)
 {
-    return "vernam called";
+	string autoKey(key), cipherText(plainText);
+
+	for (int i = 0; i < autoKey.length(); i++)//把 key 都轉成小寫
+	{
+		autoKey[i] = autoKey[i] - 65 + 97;
+	}
+
+	for (int i = key.length(); i < plainText.length(); i++)
+	{
+		autoKey.push_back(plainText[i - key.length()]);
+	}
+
+	for (int i = 0; i < cipherText.length(); i++)
+	{
+		if (cipherText[i] == 32)
+		{
+			continue;
+		}
+		else
+		{
+			cipherText[i] = ((cipherText[i] - 97) ^ (autoKey[i] - 97)) + 65;
+		}
+	}
+	return cipherText;
 }
 string row(string key, string plainText)
 {
