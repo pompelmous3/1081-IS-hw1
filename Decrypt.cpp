@@ -60,7 +60,22 @@ string playfair(string key, string cipherText)
 }
 string vernam(string key, string cipherText)
 {
-    return "vernam called";
+	string autoKey(key), plainText(cipherText);
+
+	for (int i = 0; i < plainText.length(); i++)
+	{
+		if (cipherText[i] == 32)
+		{
+			continue;
+		}
+		else
+		{
+			plainText[i] = ((cipherText[i] - 65) ^ (autoKey[i] - 65)) + 97;
+
+			autoKey.push_back(((cipherText[i] - 65) ^ (autoKey[i] - 65)) + 65);
+		}
+	}
+	return plainText;
 }
 string row(string key, string cipherText)
 {
