@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
 
     // input
     const string CIPHER = argv[1], KEY = argv[2], PLAIN_TEXT = argv[3];
-    //const string CIPHER = "playfair", KEY = "COMP", PLAIN_TEXT = "doyourbestandthenletgo"; // 測試用
     string cipherText;
 
     if (CIPHER == "caesar")
@@ -184,7 +183,29 @@ string vernam(string key, string plainText)
 
 string row(string key, string plainText)
 {
-    return "row called";
+    string result;
+    vector<vector<char>> temp(key.length(),vector<char>(0));
+
+    // 以 KEY 中的數字 直接將文字放入對應的欄位
+    int k = 0, i = 0;
+    while (k < plainText.length())
+    {
+        int row = static_cast<int>(key[i] - '0') - 1;
+        temp[row].push_back(plainText[k]);
+        i = (i == key.length()-1 ? 0 : i + 1);
+        k++;
+    }
+
+    // 將每一欄接起來
+    for (int i = 0; i < key.length(); i++)
+    {
+        for (int j = 0; j < temp[i].size(); j++)
+        {
+            result.push_back(temp[i][j]);
+        }
+    }
+
+    return result;
 }
 
 string railFence(string key, string plainText)
