@@ -189,5 +189,45 @@ string row(string key, string plainText)
 
 string railFence(string key, string plainText)
 {
-    return "rail fence called";
+	int k = stoi(key);
+	string cipherText("");
+
+	vector<vector<char>> v;
+	v.resize(k);
+
+	int count = 0;
+	for (int i = 0; i < plainText.length(); i++)
+	{
+		v[count].push_back(plainText[i]);
+		if (count == k - 1)
+		{
+			count = 0;
+		}
+		else
+		{
+			count++;
+		}
+	}
+
+	for (int i = 0; i < v.size(); i++)
+	{
+		for (int j = 0; j < v[i].size(); j++)
+		{
+			cipherText.push_back(v[i][j]);
+		}
+	}
+
+	for (int i = 0; i < cipherText.length(); i++)
+	{
+		if (cipherText[i] == 32)
+		{
+			continue;
+		}
+		else
+		{
+			cipherText[i] = cipherText[i] - 97 + 65;
+		}
+	}
+
+	return cipherText;
 }
