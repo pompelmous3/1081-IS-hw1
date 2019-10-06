@@ -178,5 +178,57 @@ string row(string key, string cipherText)
 }
 string railFence(string key, string cipherText)
 {
-    return "rail fence called";
+	string plainText("");
+	int k = stoi(key);
+	int colNum = cipherText.length() / k;
+	int r = cipherText.length() % k;//前 r 個 row 都會多一個 column
+
+	vector<vector<char>>v;
+	v.resize(k);
+
+	int count = 0;
+	for (int i = 0; i < v.size(); i++)
+	{
+		if (i <= (r - 1))
+		{
+			for (int j = 0; j < (colNum + 1); j++)
+			{
+				v[i].push_back(cipherText[count++]);
+			}
+		}
+		else
+		{
+			for (int j = 0; j < colNum; j++)
+			{
+				v[i].push_back(cipherText[count++]);
+			}
+		}
+	}
+
+	for (int i = 0; i < colNum; i++)
+	{
+		for (int j = 0; j < v.size(); j++)
+		{
+			plainText.push_back(v[j][i]);
+		}
+	}
+
+	for (int i = 0; i < r; i++)
+	{
+		plainText.push_back(v[i][colNum]);
+	}
+
+	for (int i = 0; i < plainText.size(); i++)
+	{
+		if (plainText[i] == 32)
+		{
+			continue;
+		}
+		else
+		{
+			plainText[i] = plainText[i] - 65 + 97;
+		}
+	}
+
+	return plainText;
 }
