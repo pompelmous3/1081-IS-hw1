@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
 
     // input
     const string CIPHER = argv[1], KEY = argv[2], CIPHER_TEXT = argv[3];
-    // const string CIPHER = "playfair", KEY = "COMP", CIPHER_TEXT = "IDWPQSDFTUGUFRKBHNFSDA"; // 測試用
     string plainText;
 
     if (CIPHER == "caesar")
@@ -40,6 +39,7 @@ int main(int argc, char *argv[]) {
     }
 
     // output
+    std::transform(plainText.begin(), plainText.end(), plainText.begin(), ::tolower);
     cout << plainText;
 }
 
@@ -128,6 +128,13 @@ string playfair(string key, string cipherText)
 
     // 解密
     string result;
+    for (int k = 0; k < cipherText.length(); k++)
+    {
+        if (cipherText[k] == 'J')
+        {
+            cipherText[k] = 'I';
+        }
+    }
     for (int k = 0; k < cipherText.length(); k += 2)
     {
         char letter1 = cipherText[k], letter2 = cipherText[k + 1];
@@ -149,7 +156,6 @@ string playfair(string key, string cipherText)
         }
     }
 
-    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
     return result;
 }
 
@@ -172,10 +178,52 @@ string vernam(string key, string cipherText)
 	}
 	return plainText;
 }
+
 string row(string key, string cipherText)
 {
-    return "row called";
+    // 依據總字數和key的字數 算出每欄的字數
+    string result;
+    vector<vector<char>> temp(key.length(), vector<char>());
+    vector<int> amount(key.length(), floor(cipherText.length()/key.length()));
+    for (int i = 0; i < cipherText.length() % key.length(); i++)
+    {
+        amount[i]++;
+    }
+
+    // 轉換明文和密文對應的欄位
+    vector<int> rowIndex(key.length());
+    for (int i = 0; i < key.length(); i++)
+    {
+        rowIndex[static_cast<int>(key[i]-'0')-1] = i;
+    }
+    
+    // 將密文放入欄位
+    int k = 0, i=0;
+    while (k < cipherText.length())
+    {
+        temp[rowIndex[i]].push_back(cipherText[k]);
+        amount[rowIndex[i]]--;
+        if (amount[rowIndex[i]] == 0)
+        {
+            i++;
+        }
+        k++;
+    }
+
+    // 取出明文
+    k = 0, i = 0;
+    int j = 0;
+    while (k < cipherText.length())
+    {
+        result.push_back(temp[i][j]);
+        j = (i == key.length() - 1 ? j + 1 : j);
+        i = (i == key.length() - 1 ? 0 : i + 1);
+        k++;
+    }
+
+    return result;
 }
+
 string railFence(string key, string cipherText)
 {
 	string plainText("");
