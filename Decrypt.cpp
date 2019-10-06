@@ -128,13 +128,6 @@ string playfair(string key, string cipherText)
 
     // ¸Ñ±K
     string result;
-    for (int k = 0; k < cipherText.length(); k++)
-    {
-        if (cipherText[k] == 'J')
-        {
-            cipherText[k] = 'I';
-        }
-    }
     for (int k = 0; k < cipherText.length(); k += 2)
     {
         char letter1 = cipherText[k], letter2 = cipherText[k + 1];
