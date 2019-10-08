@@ -129,6 +129,7 @@ string playfair(string key, string plainText)
 
     // ¥[±K
     string result;
+    std::transform(plainText.begin(), plainText.end(), plainText.begin(), ::toupper);
     for (int k = 0; k < plainText.length(); k += 2)
     {
         char letter1 = plainText[k], letter2 = plainText[k + 1];
