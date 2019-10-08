@@ -190,8 +190,8 @@ string row(string key, string plainText)
     int k = 0, i = 0;
     while (k < plainText.length())
     {
-        int row = static_cast<int>(key[i] - '0') - 1;
-        temp[row].push_back(plainText[k]);
+        int column = static_cast<int>(key[i] - '0') - 1;
+        temp[column].push_back(plainText[k]);
         i = (i == key.length()-1 ? 0 : i + 1);
         k++;
     }

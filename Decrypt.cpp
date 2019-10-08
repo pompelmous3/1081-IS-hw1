@@ -191,19 +191,19 @@ string row(string key, string cipherText)
     }
 
     // 轉換明文和密文對應的欄位
-    vector<int> rowIndex(key.length());
+    vector<int> columnIndex(key.length());
     for (int i = 0; i < key.length(); i++)
     {
-        rowIndex[static_cast<int>(key[i]-'0')-1] = i;
+        columnIndex[static_cast<int>(key[i]-'0')-1] = i;
     }
     
     // 將密文放入欄位
     int k = 0, i=0;
     while (k < cipherText.length())
     {
-        temp[rowIndex[i]].push_back(cipherText[k]);
-        amount[rowIndex[i]]--;
-        if (amount[rowIndex[i]] == 0)
+        temp[columnIndex[i]].push_back(cipherText[k]);
+        amount[columnIndex[i]]--;
+        if (amount[columnIndex[i]] == 0)
         {
             i++;
         }
