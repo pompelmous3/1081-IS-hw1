@@ -78,23 +78,17 @@ string playfair(string key, string plainText)
                 matrix[i][j] = 'I';
                 used[8] = true;
                 used[9] = true;
-                position['I'] = pair<int, int>(i,j);
+                position['I'] = pair<int, int>(i, j);
+                position['J'] = pair<int, int>(i, j);
             }
             else
             {
                 matrix[i][j] = key[k];
                 used[static_cast<unsigned>(key[k] - 65)] = true;
-                position[key[k]] = pair<int, int>(i,j);
+                position[key[k]] = pair<int, int>(i, j);
             }
-            if (i < 4)
-            {
-                i++;
-            }
-            else
-            {
-                i = 0;
-                j++;
-            }
+            j = (i < 4 ? j : j + 1);
+            i = (i < 4 ? i + 1 : 0);
         }
         k++;
     }
@@ -107,23 +101,17 @@ string playfair(string key, string plainText)
                 matrix[i][j] = 'I';
                 used[8] = true;
                 used[9] = true;
-                position['I'] = pair<int, int>(i,j);
+                position['I'] = pair<int, int>(i, j);
+                position['J'] = pair<int, int>(i, j);
             }
             else
             {
                 matrix[i][j] = static_cast<char>(k + 65);
                 used[k] = true;
-                position[static_cast<char>(k+65)] = pair<int, int>(i,j);
+                position[static_cast<char>(k + 65)] = pair<int, int>(i, j);
             }
-            if (i < 4)
-            {
-                i++;
-            }
-            else
-            {
-                i = 0;
-                j++;
-            }
+            j = (i < 4 ? j : j + 1);
+            i = (i < 4 ? i + 1 : 0);
         }
     }
 
@@ -150,7 +138,6 @@ string playfair(string key, string plainText)
             result.push_back(matrix[i1][j2]);
         }
     }
-
     return result;
 }
 
@@ -185,7 +172,7 @@ string vernam(string key, string plainText)
 string row(string key, string plainText)
 {
     string result;
-    vector<vector<char>> temp(key.length(),vector<char>(0));
+    vector<vector<char>> temp(key.length(), vector<char>(0));
 
     // 以 KEY 中的數字 直接將文字放入對應的欄位
     int k = 0, i = 0;
@@ -193,7 +180,7 @@ string row(string key, string plainText)
     {
         int column = static_cast<int>(key[i] - '0') - 1;
         temp[column].push_back(plainText[k]);
-        i = (i == key.length()-1 ? 0 : i + 1);
+        i = (i == key.length() - 1 ? 0 : i + 1);
         k++;
     }
 
@@ -205,51 +192,50 @@ string row(string key, string plainText)
             result.push_back(temp[i][j]);
         }
     }
-
     return result;
 }
 
 string railFence(string key, string plainText)
 {
-	int k = stoi(key);
-	string cipherText("");
+    int k = stoi(key);
+    string cipherText("");
 
-	vector<vector<char>> v;
-	v.resize(k);
+    vector<vector<char>> v;
+    v.resize(k);
 
-	int count = 0;
-	for (int i = 0; i < plainText.length(); i++)
-	{
-		v[count].push_back(plainText[i]);
-		if (count == k - 1)
-		{
-			count = 0;
-		}
-		else
-		{
-			count++;
-		}
-	}
+    int count = 0;
+    for (int i = 0; i < plainText.length(); i++)
+    {
+        v[count].push_back(plainText[i]);
+        if (count == k - 1)
+        {
+            count = 0;
+        }
+        else
+        {
+            count++;
+        }
+    }
 
-	for (int i = 0; i < v.size(); i++)
-	{
-		for (int j = 0; j < v[i].size(); j++)
-		{
-			cipherText.push_back(v[i][j]);
-		}
-	}
+    for (int i = 0; i < v.size(); i++)
+    {
+        for (int j = 0; j < v[i].size(); j++)
+        {
+            cipherText.push_back(v[i][j]);
+        }
+    }
 
-	for (int i = 0; i < cipherText.length(); i++)
-	{
-		if (cipherText[i] == 32)
-		{
-			continue;
-		}
-		else
-		{
-			cipherText[i] = cipherText[i] - 97 + 65;
-		}
-	}
+    for (int i = 0; i < cipherText.length(); i++)
+    {
+        if (cipherText[i] == 32)
+        {
+            continue;
+        }
+        else
+        {
+            cipherText[i] = cipherText[i] - 97 + 65;
+        }
+    }
 
-	return cipherText;
+    return cipherText;
 }
