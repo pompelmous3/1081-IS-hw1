@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 
     // input
     const string CIPHER = argv[1], KEY = argv[2], CIPHER_TEXT = argv[3];
+
     string plainText;
 
     if (CIPHER == "caesar")
@@ -78,6 +79,7 @@ string playfair(string key, string cipherText)
                 used[8] = true;
                 used[9] = true;
                 position['I'] = pair<int, int>(i, j);
+				position['J'] = pair<int, int>(i, j);
             }
             else
             {
@@ -85,15 +87,8 @@ string playfair(string key, string cipherText)
                 used[static_cast<unsigned>(key[k] - 65)] = true;
                 position[key[k]] = pair<int, int>(i, j);
             }
-            if (i < 4)
-            {
-                i++;
-            }
-            else
-            {
-                i = 0;
-                j++;
-            }
+            j = (i < 4 ? j : j + 1);
+            i = (i < 4 ? i + 1 : 0);
         }
         k++;
     }
@@ -107,6 +102,7 @@ string playfair(string key, string cipherText)
                 used[8] = true;
                 used[9] = true;
                 position['I'] = pair<int, int>(i, j);
+				position['J'] = pair<int, int>(i, j);
             }
             else
             {
@@ -114,27 +110,13 @@ string playfair(string key, string cipherText)
                 used[k] = true;
                 position[static_cast<char>(k + 65)] = pair<int, int>(i, j);
             }
-            if (i < 4)
-            {
-                i++;
-            }
-            else
-            {
-                i = 0;
-                j++;
-            }
+            j = (i < 4 ? j : j + 1);
+            i = (i < 4 ? i + 1 : 0);
         }
     }
 
     // ¸Ñ±K
     string result;
-    for (int k = 0; k < cipherText.length(); k++)
-    {
-        if (cipherText[k] == 'J')
-        {
-            cipherText[k] = 'I';
-        }
-    }
     for (int k = 0; k < cipherText.length(); k += 2)
     {
         char letter1 = cipherText[k], letter2 = cipherText[k + 1];
