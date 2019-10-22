@@ -341,7 +341,7 @@ string roundF(string plainText, string key)
 
 		plainText = nextPlainL + nextPlainR;
 	}
-
+	plainText = nextPlainR + nextPlainL;
 	system("pause");
 	return plainText;
 }
