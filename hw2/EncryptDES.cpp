@@ -138,19 +138,16 @@ string PF(string toBePFed);
 string IPinverseF(string p);
 string biToHex(string bi);
 
-int main() {
+int main(int argc, char *argv[]) {
 
-	string p, k;
-	cin >> p >> k;
-	cout << "p : " << p << endl << "k : " << k << endl;
+	string p = argv[2];//0x後面接16個十六進位數字
+	string k = argv[1];//0x後面接16個十六進位數字
 
 	string cipherText = desEncrypt(p, k);
 	cipherText = biToHex(cipherText);
 
 	cout << "0x" << cipherText;
-	system("pause");
 	return 0;
-
 }
 
 //---------------------------------------------------- desEncrypt ------------------------------------------------
