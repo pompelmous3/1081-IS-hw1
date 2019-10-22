@@ -140,8 +140,8 @@ string biToHex(string bi);
 
 int main(int argc, char *argv[]) {
 
-	string p = argv[2];//0x«á­±±µ16­Ó¤Q¤»¶i¦ì¼Æ¦r
-	string k = argv[1];//0x«á­±±µ16­Ó¤Q¤»¶i¦ì¼Æ¦r
+	string p = argv[2];//0xå¾Œé¢æ¥16å€‹åå…­é€²ä½æ•¸å­—
+	string k = argv[1];//0xå¾Œé¢æ¥16å€‹åå…­é€²ä½æ•¸å­—
 
 	string cipherText = desEncrypt(p, k);
 	cipherText = biToHex(cipherText);
@@ -155,28 +155,18 @@ int main(int argc, char *argv[]) {
 string desEncrypt(string plainText, string key)
 {
 
-	// 1 : ¥h±¼«e¨â¦ì¡A16 ¶i¦ìÂà¦¨ 2 ¶i¦ì
+	// 1 : å»æ‰å‰å…©ä½ï¼Œ16 é€²ä½è½‰æˆ 2 é€²ä½
 	plainText.erase(0, 2);
 	key.erase(0, 2);
-	//cout << "desEncrypt plainText : " << plainText << endl << "desEncrypt key : " << key << endl;
-
-
 
 	plainText = hexToBi(plainText);
 	key = hexToBi(key);
 
-	//cout << "desEncrypt plainText after hexToBi : " << plainText << endl << "desEncrypt key after hexToBi : " << key << endl;
-	//system("pause");
-
-	// 2 : plainText °µ IP , key °µ PC_1
+	// 2 : plainText åš IP , key åš PC_1
 	plainText = initialPermutation(plainText);
 	key = PC_1F(key);
 
-	//cout << "desEncrypt plainText after IP : " << plainText << endl << "desEncrypt key after PC_1 : " << key << endl;
-	//system("pause");
-
-	// 3 : °µ 16 ¦¸ roundF 
-
+	// 3 : åš 16 æ¬¡ roundF 
 	string afterRoundF = roundF(plainText, key);
 
 	afterRoundF = IPinverseF(afterRoundF);
@@ -218,8 +208,8 @@ string keyTransform(string preRoundKey, int round)
 }
 
 //--------------------------------------------------- leftShift -------------------------------------------------
-//input  : ­n°µ shift ªº 28 bit keyL, keyR 
-//output : shift «áªº 28 bit
+//input  : è¦åš shift çš„ 28 bit keyL, keyR 
+//output : shift å¾Œçš„ 28 bit
 
 string leftShift(string preKey, int shiftNumber)
 {
@@ -241,8 +231,8 @@ string leftShift(string preKey, int shiftNumber)
 }
 
 //--------------------------------------------------- PC_2F ------------------------------------------------
-// input  : shift §¹ªº 56-bit key
-// output : permuted choice «áªº 48-bit key
+// input  : shift å®Œçš„ 56-bit key
+// output : permuted choice å¾Œçš„ 48-bit key
 
 string PC_2F(string shiftedKey)
 {
@@ -264,7 +254,7 @@ string hexToBi(string hex) {
 	string bi = "";
 	int bitValue;
 
-	//¨C¤@­Ó hex ªº bit ³£ÂX®i¦¨ 4 ­Ó bit, push_back ¨ì bi
+	//æ¯ä¸€å€‹ hex çš„ bit éƒ½æ“´å±•æˆ 4 å€‹ bit, push_back åˆ° bi
 	for (int i = 0; i < hex.length(); i++)
 	{
 		bitValue = hex[i];
@@ -304,14 +294,11 @@ string initialPermutation(string plain) {
 }
 
 //--------------------------------------------------- roundF -------------------------------------------------
-// input  : ¶Ç¤J initialPermutation «áªº plainText , ¤Î PC_1 «áªº key
-// output : return °µ§¹ 16 ¦¸ f ªº text , ¥X¥h°µ finalPermutation
+// input  : å‚³å…¥ initialPermutation å¾Œçš„ plainText , åŠ PC_1 å¾Œçš„ key
+// output : return åšå®Œ 16 æ¬¡ f çš„ text , å‡ºå»åš finalPermutation
 
 string roundF(string plainText, string key)
 {
-	/*cout << "roundF plainText : " << plainText << endl << "roundF key : " << key << endl;
-	system("pause");*/
-
 	string plainL(""), plainR(""), nextPlainL(""), nextPlainR("");
 
 	string roundKey(key);//56-bit
@@ -322,16 +309,10 @@ string roundF(string plainText, string key)
 	{
 		plainL = plainText.substr(0, 32);
 		plainR = plainText.substr(32, 32);
-		/*cout << "round : " << i << endl;
-		cout << "plainText : " << plainText << endl;
-		cout << "plainL : " << plainL << endl;
-		cout << "plainR : " << plainR << endl;*/
-
+		
 		//key schedule
-		roundKey = keyTransform(roundKey, i);//roundKey °µ¸Ó round ªº shift, §ï°Ê·|¶Ç¨ì¤U¤@ round
-		key_48_bit = PC_2F(roundKey);//key_48_bit ¬O³o round ¸ò plainR °µ f() ªº 48-bit key
-
-		cout << "roundKey : " << roundKey << endl;
+		roundKey = keyTransform(roundKey, i);//roundKey åšè©² round çš„ shift, æ”¹å‹•æœƒå‚³åˆ°ä¸‹ä¸€ round
+		key_48_bit = PC_2F(roundKey);//key_48_bit æ˜¯é€™ round è·Ÿ plainR åš f() çš„ 48-bit key
 
 		nextPlainR = XORstrings(plainL, f(plainR, key_48_bit));
 		nextPlainL = plainR;
@@ -339,7 +320,6 @@ string roundF(string plainText, string key)
 		plainText = nextPlainL + nextPlainR;
 	}
 	plainText = nextPlainR + nextPlainL;
-	system("pause");
 	return plainText;
 }
 
@@ -398,7 +378,7 @@ string sBoxOperation(string p_48, int round)
 {
 	string subStr = p_48.substr((round - 1) * 6, 6);
 
-	string rowStr = subStr.substr(0, 1) + subStr[5];//²Ä¤@­Ó©M³Ì«á¤@­Ó²Õ¦¨ row string
+	string rowStr = subStr.substr(0, 1) + subStr[5];//ç¬¬ä¸€å€‹å’Œæœ€å¾Œä¸€å€‹çµ„æˆ row string
 	string columnStr = subStr.substr(1, 4);
 	string resultStr;
 	int resultInt;
