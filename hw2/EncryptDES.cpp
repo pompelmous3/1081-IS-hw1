@@ -21,7 +21,7 @@ vector<int> IPinverse =
 39, 7 , 47, 15, 55, 23, 63, 31,
 38, 6 , 46, 14, 54, 22, 62, 30,
 37, 5 , 45, 13, 53, 21, 61, 29,
-36, 4 , 44, 12, 52, 21, 60, 28,
+36, 4 , 44, 12, 52, 20, 60, 28,
 35, 3 , 43, 11, 51, 19, 59, 27,
 34, 2 , 42, 10, 50 ,18, 58, 26,
 33, 1 , 41, 9 , 49, 17, 57, 25
@@ -138,16 +138,19 @@ string PF(string toBePFed);
 string IPinverseF(string p);
 string biToHex(string bi);
 
-int main(int argc, char *argv[]) {
+int main() {
 
-	string p = argv[2];//0x後面接16個十六進位數字
-	string k = argv[1];//0x後面接16個十六進位數字
+	string p, k;
+	cin >> p >> k;
+	cout << "p : " << p << endl << "k : " << k << endl;
 
 	string cipherText = desEncrypt(p, k);
 	cipherText = biToHex(cipherText);
 
 	cout << "0x" << cipherText;
+	system("pause");
 	return 0;
+
 }
 
 //---------------------------------------------------- desEncrypt ------------------------------------------------
@@ -158,14 +161,22 @@ string desEncrypt(string plainText, string key)
 	// 1 : 去掉前兩位，16 進位轉成 2 進位
 	plainText.erase(0, 2);
 	key.erase(0, 2);
+	//cout << "desEncrypt plainText : " << plainText << endl << "desEncrypt key : " << key << endl;
+
+
 
 	plainText = hexToBi(plainText);
 	key = hexToBi(key);
 
+	//cout << "desEncrypt plainText after hexToBi : " << plainText << endl << "desEncrypt key after hexToBi : " << key << endl;
+	//system("pause");
 
 	// 2 : plainText 做 IP , key 做 PC_1
 	plainText = initialPermutation(plainText);
 	key = PC_1F(key);
+
+	//cout << "desEncrypt plainText after IP : " << plainText << endl << "desEncrypt key after PC_1 : " << key << endl;
+	//system("pause");
 
 	// 3 : 做 16 次 roundF 
 
@@ -274,10 +285,10 @@ string hexToBi(string hex) {
 		}
 
 
-		bi.push_back(bitValue / 8);
-		bi.push_back((bitValue % 8) / 4);
-		bi.push_back((bitValue % 4) / 2);
-		bi.push_back(bitValue % 2);
+		bi.push_back(bitValue / 8 + 48);
+		bi.push_back((bitValue % 8) / 4 + 48);
+		bi.push_back((bitValue % 4) / 2 + 48);
+		bi.push_back(bitValue % 2 + 48);
 	}
 	return bi;
 }
@@ -301,6 +312,8 @@ string initialPermutation(string plain) {
 
 string roundF(string plainText, string key)
 {
+	/*cout << "roundF plainText : " << plainText << endl << "roundF key : " << key << endl;
+	system("pause");*/
 
 	string plainL(""), plainR(""), nextPlainL(""), nextPlainR("");
 
@@ -312,17 +325,24 @@ string roundF(string plainText, string key)
 	{
 		plainL = plainText.substr(0, 32);
 		plainR = plainText.substr(32, 32);
+		/*cout << "round : " << i << endl;
+		cout << "plainText : " << plainText << endl;
+		cout << "plainL : " << plainL << endl;
+		cout << "plainR : " << plainR << endl;*/
 
 		//key schedule
 		roundKey = keyTransform(roundKey, i);//roundKey 做該 round 的 shift, 改動會傳到下一 round
 		key_48_bit = PC_2F(roundKey);//key_48_bit 是這 round 跟 plainR 做 f() 的 48-bit key
 
+		cout << "roundKey : " << roundKey << endl;
 
 		nextPlainR = XORstrings(plainL, f(plainR, key_48_bit));
 		nextPlainL = plainR;
 
 		plainText = nextPlainL + nextPlainR;
 	}
+
+	system("pause");
 	return plainText;
 }
 
@@ -366,7 +386,7 @@ string XORstrings(string a, string b)
 	{
 		for (int i = 0; i < a.length(); i++)
 		{
-			result += (a[i] ^ b[i]);
+			result += ((a[i] - 48) ^ (b[i] - 48)) + 48;
 		}
 		return result;
 	}
@@ -408,10 +428,10 @@ int biToInt(string bi)
 string intToBi(int n)
 {//4 bit
 	string s("");
-	s.push_back(n / 8);
-	s.push_back((n % 8) / 4);
-	s.push_back((n % 4) / 2);
-	s.push_back(n % 2);
+	s.push_back(n / 8 + 48);
+	s.push_back((n % 8) / 4 + 48);
+	s.push_back((n % 4) / 2 + 48);
+	s.push_back(n % 2 + 48);
 	return s;
 }
 
@@ -444,7 +464,7 @@ string biToHex(string bi)
 	{
 		hexBitInt = 0;
 		hexBitStr = bi.substr(i, 4);
-		hexBitInt = hexBitStr[0] * 8 + hexBitStr[1] * 4 + hexBitStr[2] * 2 + hexBitStr[3];
+		hexBitInt = (hexBitStr[0] - 48) * 8 + (hexBitStr[1] - 48) * 4 + (hexBitStr[2] - 48) * 2 + (hexBitStr[3] - 48);
 		if (hexBitInt >= 0 && hexBitInt <= 9)
 		{
 			hex.push_back(48 + hexBitInt);
