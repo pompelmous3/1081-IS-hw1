@@ -141,8 +141,18 @@ string biToHex(string bi);
 
 int main(int argc, char *argv[]) {
 
-	string p = argv[2];//0x後面接16個十六進位數字
-	string k = argv[1];//0x後面接16個十六進位數字
+	string p, k;
+
+	switch (argc)
+	{
+	case 1:
+		cin >> p >> k;
+		break;
+	case 3:
+		k = argv[1];
+		p = argv[2];
+		break;
+	}
 	
 	std::transform(k.begin(), k.end(), k.begin(), ::tolower);
 	
