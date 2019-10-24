@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<algorithm>
 using namespace std;
 
 //initial permutation vector
@@ -142,7 +143,9 @@ int main(int argc, char *argv[]) {
 
 	string p = argv[2];//0x後面接16個十六進位數字
 	string k = argv[1];//0x後面接16個十六進位數字
-
+	
+	std::transform(k.begin(), k.end(), k.begin(), ::tolower);
+	
 	string cipherText = desEncrypt(p, k);
 	cipherText = biToHex(cipherText);
 
