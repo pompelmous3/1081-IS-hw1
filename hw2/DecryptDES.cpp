@@ -241,7 +241,7 @@ string DecryptDES(string key, string cipherText)
     for (int round = 1; round <= 16; round++)
     {
         string temp = right;
-        right = exclusiveOR(left, Feistel(subkeys[16 - round], right));
+        right = exclusiveOR(left, Feistel(subkeys[round-1], right));
         left = temp;
     }
     text = right + left;
@@ -272,14 +272,14 @@ vector<string> GenerateKeys(string key)
         case 2:
         case 9:
         case 16:
-            left = left.substr(1, 27) + left.substr(0, 1);
-            right = right.substr(1, 27) + right.substr(0, 1);
+            left = left.substr(27, 1) + left.substr(0, 27);
+            right = right.substr(27, 1) + right.substr(0, 27);
             key = left + right;
             subkeys.push_back(PC(2, key));
             break;
         default:
-            left = left.substr(2, 26) + left.substr(0, 2);
-            right = right.substr(2, 26) + right.substr(0, 2);
+            left = left.substr(26, 2) + left.substr(0, 26);
+            right = right.substr(26, 2) + right.substr(0, 26);
             key = left + right;
             subkeys.push_back(PC(2, key));
             break;
