@@ -106,7 +106,7 @@ const int ipVector[64] = { 58, 50, 42, 34, 26, 18, 10, 2,
             2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11
         }
 },
-PVector[32] = { 16, 7 , 20, 21, 29, 12, 28, 17,
+    PVector[32] = { 16, 7 , 20, 21, 29, 12, 28, 17,
                 1 , 15, 23, 26, 5 , 18, 31, 10,
                 2 , 8 , 24, 14, 32, 27, 3 , 9 ,
                 19, 13, 30, 6 , 22, 11, 4 , 25 };
@@ -360,7 +360,7 @@ string Substitution(int digit, string text)
     int row = 0, column = 0;
     for (int i = 0; i < 6; i++)
     {
-        if (text[0] == '1')
+        if (text[i] == '1')
         {
             switch (i)
             {
@@ -385,9 +385,10 @@ string Substitution(int digit, string text)
     return result;
 }
 
+// 將十進位int轉為二進位字串
 string DecToBin(int dec)
 {
-    string result;
+    string result = "";
     for (int i = 0; i < 4; i++)
     {
         result = static_cast<char>((dec % 2) + '0') + result;
