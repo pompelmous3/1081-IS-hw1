@@ -83,6 +83,13 @@ def CBC(filePath, key):
 
 
 def selfMade(filePath, key):
+    i_v = ""
+    i_p = [7, 15, 6, 1, 10, 8, 3, 11, 16, 13, 2, 9, 14, 4, 5, 12]
+    i_p = i_p[(int(key[0]) % 16):] + i_p[:(int(key[0]) % 16)]
+    for index in i_p:
+        i_v += key[index - 1]
+    
+
     return
 # // end selfMade()
 
