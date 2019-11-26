@@ -5,7 +5,7 @@ from Crypto.Cipher import AES
 
 
 def main():
-    # 輸入圖檔路徑、 block cyphor mode 和 key
+    # 輸入圖檔路徑、 block cipher mode 和 key
     file_path = None
     mode = None
     key = None
