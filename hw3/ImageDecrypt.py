@@ -5,10 +5,7 @@ from Crypto.Cipher import AES
 
 
 def main():
-    # 輸入圖檔路徑、 block cyphor mode 和 key
-    file_path = None
-    mode = None
-    key = None
+    # 輸入圖檔路徑、 block cypher mode 和 key
     if len(sys.argv) == 4:
         file_path = sys.argv[1]
         mode = sys.argv[2]
@@ -155,5 +152,5 @@ def CTR(file_path, key):
     return
 # // end selfMade()
 
-main()
 
+main()
