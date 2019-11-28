@@ -5,45 +5,44 @@ from Crypto.Cipher import AES
 
 
 def main():
-    # 輸入圖檔路徑、 block cypher mode 和 key
-    if len(sys.argv) == 4:
+    # 輸入圖檔路徑、 block cipher mode 和 key
+    file_path = None
+    mode = None
+    key = None
+    if(len(sys.argv) == 4):
         file_path = sys.argv[1]
         mode = sys.argv[2]
-        key = sys.argv[3]
+        key = (sys.argv[3]).upper()
     else:
-        file_path = input('The path of the image (Ex. penguin.png): ')
-        mode = input('The mode of block cypher (ECB/ CBC/ CTR): ')
-        key = input('The key (not case-sensitive): ')
+        file_path = input('Enter the path of the image (Ex. color_encrypted.png): ')
+        mode = input(
+            'Enter the mode of block cipher (ECB/ CBC/ CTR): ')
+        key = (input('Enter the key (16 characters, not case-sensitive): ')).upper()
 
     # 取出檔案名稱和副檔名
     filename, ext = os.path.splitext(os.path.split(file_path)[1])
 
     # 把檔案轉存成 ./____.ppm
-    Image.open(file_path).save(filename+'.ppm')
+    Image.open(file_path).save(filename+'_'+mode+'.ppm')
 
-    # 對 .ppm 解密
-    if mode == 'ECB':
-        ECB(filename + '.ppm', key)
-    elif mode == 'CBC':
-        CBC(filename + '.ppm', key)
-    elif mode == 'CTR':
-        CTR(filename + '.ppm', key)
+    # 對 .ppm 加密
+    if(mode == 'ECB'):
+        ECB(filename + '_'+mode + '.ppm', key)
+    elif(mode == 'CBC'):
+        CBC(filename + '_'+mode + '.ppm', key)
+    elif(mode == 'CTR'):
+        CTR(filename + '_'+mode + '.ppm', key)
 
-    # 將 .ppm 轉存成 ./____.xxx
-
+    # 將 .ppm 轉存成 ./____.xxx (jpeg/gif/png/bmp)
     target_format = ext[1:]
-    if target_format.lower() == 'jpg':
+    if(target_format.lower() == 'jpg'):
         target_format = 'jpeg'
-    Image.open(filename + '_' + mode + '.ppm').save(filename + '_' + mode +
-                                                    '_encrypted' + ext, target_format)
+    Image.open(filename + '_'+mode + '.ppm').save(filename + '_' + mode +
+                                                  '_decrypted' + ext, target_format)
 
     # 刪除 ./____.ppm
-    os.remove(filename + '.ppm')
+    os.remove(filename + '_'+mode + '.ppm')
 # // end main()
-
-# 加解密用套件的AES
-# 除了第三個0A（換行符號）前的東西不變　其他的東西用16byte為單位丟進去做就對了
-# padding 的方式用 PKCS ？ (有N個 就寫N0補到滿)
 
 
 def ECB(file_path, key):
@@ -88,7 +87,7 @@ def CBC(file_path, key):
             result += one_byte
             if one_byte == b'\n':
                 line += 1
-        cryptor = AES.new(bytes(key.encode('utf-8')), AES.MODE_CBC)
+        cryptor = AES.new(bytes(key.encode('utf-8')), AES.MODE_ECB)
 
         cipher_block = file.read(16)
         # 16 bytes
@@ -130,12 +129,13 @@ def CTR(file_path, key):
             result += one_byte
             if one_byte == b'\n':
                 line += 1
-        cryptor = AES.new(bytes(key.encode('utf-8')), AES.MODE_CTR)
+        cryptor = AES.new(bytes(key.encode('utf-8')), AES.MODE_ECB)
 
         cipher_block = file.read(16)
         while len(cipher_block) == 16:
             cipher_i_v = cryptor.encrypt(i_v)
-            plain_text = bytes([cipher_block[i] ^ cipher_i_v[i] for i in range(16)])
+            plain_text = bytes([cipher_block[i] ^ cipher_i_v[i]
+                                for i in range(16)])
             result += plain_text
             i_v = (int.from_bytes(i_v, 'big') + 1).to_bytes(16, 'big')
             cipher_block = file.read(16)
@@ -145,7 +145,8 @@ def CTR(file_path, key):
             padding = padding_amount.to_bytes(1, 'little')
             cipher_block += padding * padding_amount
             cipher_i_v = cryptor.encrypt(i_v)
-            plain_text = bytes([cipher_block[i] ^ cipher_i_v[i] for i in range(16)])
+            plain_text = bytes([cipher_block[i] ^ cipher_i_v[i]
+                                for i in range(16)])
         result += plain_text
     with open(file_path, 'wb') as file:
         file.write(result)

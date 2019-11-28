@@ -14,7 +14,7 @@ def main():
         mode = sys.argv[2]
         key = (sys.argv[3]).upper()
     else:
-        file_path = input('Enter the path of the image (Ex. penguin.png): ')
+        file_path = input('Enter the path of the image (Ex. color.png): ')
         mode = input(
             'Enter the mode of block cipher (ECB/ CBC/ CTR): ')
         key = (input('Enter the key (16 characters, not case-sensitive): ')).upper()
