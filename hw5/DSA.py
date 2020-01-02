@@ -101,7 +101,7 @@ def verify(message):
 	# u2 = w * r % q
 	u2 = w * r % q
 	# v = (a^u1 * b^u2 % p) % q
-	v = (square_and_multiply(a,u1,p)*square_and_multiply(b,u2,p)) % q
+	v = ((square_and_multiply(a,u1,p)*square_and_multiply(b,u2,p))% p) % q
 	if(v == r):
 		print('valid')
 	else:
@@ -128,6 +128,7 @@ def find_mode_inverse(a, m):
 		v1, v2, v3, u1, u2, u3 = (
 			u1 - q * v1), (u2 - q * v2), (u3 - q * v3), v1, v2, v3
 	return u1 % m
+
 
 def is_prime(number):	# 判斷質數
 
@@ -156,8 +157,8 @@ def rabin_miller(number):
 	while r % 2 == 0:
 		r = r // 2
 		u += 1
-	# 做五次測試
-	for test in range(5):
+	# 做五十次測試
+	for test in range(50):
 		# 找 a 使 a**r % p' != 1
 		a = random.randrange(2, number - 1)
 		temp = square_and_multiply(a, r, number)
