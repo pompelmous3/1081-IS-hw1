@@ -14,8 +14,7 @@ def main():
         # ./DSA.py -verify {message}
         elif(sys.argv[1] == '-verify'):
             verify(sys.argv[2])
-           
-    # end main()
+# end main()
 
 
 def generate_key(key_length):
@@ -23,14 +22,61 @@ def generate_key(key_length):
 # end generate_key()
 
 def sign(message):
-
+	# 讀公鑰
+	file = open('public_key.txt','r')
+	p = int(file.readline())
+	q = int(file.readline())
+	a = int(file.readline())
+	b = int(file.readline())
+	file.close()
+	# 讀私鑰
+	file = open('private_key.txt','r')
+	d = int(file.readline())
+	file.close()
+	
+	# 0 < k < q
+	k = random.randrange(1,q)
+	# r = (a^k % p) % q 
+	r = square_and_multiply(a, k, p) % q
+	# s = (SHA(x) + d * r) * k^-1 % q
+	sha_x = int(hashlib.sha1(message.encode('utf8')).hexdigest(),16)
+	s = (( sha_x + d * r) * find_mode_inverse(k,q)) % q
+	# 存簽章
+	file = open('signature.txt','w')
+	file.write( str(r) + '\n' + str(s))
+	file.close()
 # end sign()
 
 def verify(message):
-
+	# 讀公鑰
+	file = open('public_key.txt','r')
+	p = int(file.readline())
+	q = int(file.readline())
+	a = int(file.readline())
+	b = int(file.readline())
+	file.close()
+	# 讀簽章
+	file = open('signature.txt','r')
+	r = int(file.readline())
+	s = int(file.readline())
+	file.close()
+	
+	# w = s^-1 % q
+	w = find_mode_inverse(s,q) % q
+	# u1 = w * SHA(x) % q
+	sha_x = int(hashlib.sha1(message.encode('utf8')).hexdigest(),16)
+	u1 = w * sha_x % q
+	# u2 = w * r % q
+	u2 = w * r % q
+	# v = (a^u1 * b^u2 % p) % q
+	v = (square_and_multiply(a,u1,p)*square_and_multiply(b,u2,p)) % q
+	if(v == r):
+		print('valid')
+	else:
+		print('invalid')
 # end verify(message)
 
-def generateLargePrime(key_length):
+def generate_prime(key_length):
     while True:
         # generate random bits
         number = random.getrandbits(int(key_length))
@@ -50,8 +96,6 @@ def find_mode_inverse(a, m):
         v1, v2, v3, u1, u2, u3 = (
             u1 - q * v1), (u2 - q * v2), (u3 - q * v3), v1, v2, v3
     return u1 % m
-
-
 
 def is_prime(number):   # 判斷質數
 
