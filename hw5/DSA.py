@@ -20,21 +20,29 @@ def main():
 def generate_key(key_length):
 	q = generateLargePrime(160)     # generate q first
 	print(len(bin(q)))
-	
+
 	p = q * generateLargePrime(865) + 1     # generate p
 	print(p.bit_length())
 
 	h = random.randrange(2, p - 1)      # random choose h
 	alpha = square_and_multiply(h, (p - 1) // q, p)
-
 	while square_and_multiply(alpha, q, p) != 1:
-        	h = random.randrange(2, p - 1)  # random choose h
-        	alpha = square_and_multiply(h, (p - 1) // q, p)
+		h = random.randrange(2, p - 1)  # random choose h
+		alpha = square_and_multiply(h, (p - 1) // q, p)
 
 	d = random.randrange(1, q)
 	beta = square_and_multiply(alpha, d, p)
 
-    	return p, q, alpha, beta, d
+	fp = open("public_key.txt", "w")
+	fp.write(str(p) + "\n")
+	fp.write(str(q) + "\n")
+	fp.write(str(alpha) + "\n")
+	fp.write(str(beta) + "\n")
+	fp.close()
+
+	fp = open("private_key.txt", "w")
+	fp.write(str(d) + "\n")
+	fp.close()
 # end generate_key()
 
 def sign(message):
