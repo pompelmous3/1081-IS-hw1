@@ -18,10 +18,10 @@ def main():
 
 
 def generate_key(key_length):
-	q = generateLargePrime(160)     # generate q first
+	q = generate_prime(160)     # generate q first
 	print(len(bin(q)))
 
-	p = q * generateLargePrime(865) + 1     # generate p
+	p = q * generate_prime(865) + 1     # generate p
 	print(p.bit_length())
 
 	h = random.randrange(2, p - 1)      # random choose h
