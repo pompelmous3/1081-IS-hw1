@@ -19,10 +19,14 @@ def main():
 
 def generate_key(key_length):
 	q = generate_prime(key_length)     # generate q first
-	print(len(bin(q)))
+	while q >= 2 ** int(key_length) or q <= 2 ** (int(key_length) - 1):
+		q = generate_prime(key_length)
+	# print(len(bin(q)))
 
 	p = q * generate_prime(1024 - int(key_length)) + 1     # generate p
-	print(p.bit_length())
+	while p >= 2 ** 1024 or p <= 2 ** 1023 or math.gcd(p, q) != 1:
+		p = q * generate_prime(1024 - int(key_length)) + 1
+	# print(p.bit_length())
 
 	h = random.randrange(2, p - 1)      # random choose h
 	alpha = square_and_multiply(h, (p - 1) // q, p)
